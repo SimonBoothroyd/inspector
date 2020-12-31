@@ -1,6 +1,6 @@
 # Inspector
 
-[![tests](https://github.com/SimonBoothroyd/inspector/workflows/ci/badge.svg?branch=main)](https://github.com/SimonBoothroyd/inspector/actions?query=workflow%3ACI)
+[![tests](https://github.com/SimonBoothroyd/inspector/workflows/CI/badge.svg?branch=main)](https://github.com/SimonBoothroyd/inspector/actions?query=workflow%3ACI)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/SimonBoothroyd/inspector.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SimonBoothroyd/inspector/context:python)
 [![codecov](https://codecov.io/gh/SimonBoothroyd/inspector/branch/main/graph/badge.svg?token=Aa8STE8WBZ)](https://codecov.io/gh/SimonBoothroyd/inspector)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
