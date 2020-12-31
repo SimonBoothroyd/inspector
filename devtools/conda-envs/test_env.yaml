@@ -1,0 +1,27 @@
+name: test
+channels:
+  - conda-forge
+  - omnia
+  - defaults
+dependencies:
+    # Base depends
+  - python
+  - pip
+
+    # Core dependencies
+  - click
+  - openforcefield
+  - pydantic
+
+    # Backend dependencies
+  - fastapi
+
+    # Testing
+  - pytest
+  - pytest-cov
+  - codecov
+
+    # Linting
+  - isort
+  - black
+  - flake8
