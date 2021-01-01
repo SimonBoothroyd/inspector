@@ -10,6 +10,7 @@ dependencies:
 
     # Core dependencies
   - click
+  - mdtraj
   - openforcefield
   - pydantic
 
