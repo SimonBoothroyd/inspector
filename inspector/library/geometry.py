@@ -43,11 +43,15 @@ def summarize_geometry(
         for angle in molecule.angles
     ]
     bond_angles = (
-        mdtraj.compute_angles(trajectory, numpy.array(angle_indices), periodic=False)[
-            0, :
-        ]
-        / numpy.pi
-        * 180.0
+        []
+        if len(angle_indices) == 0
+        else (
+            mdtraj.compute_angles(
+                trajectory, numpy.array(angle_indices), periodic=False
+            )[0, :]
+            / numpy.pi
+            * 180.0
+        )
     )
 
     # Summarise the proper torsions
@@ -57,11 +61,15 @@ def summarize_geometry(
     ]
 
     proper_dihedral_angles = (
-        mdtraj.compute_dihedrals(
-            trajectory, numpy.array(torsion_indices), periodic=False
-        )[0, :]
-        / numpy.pi
-        * 180.0
+        []
+        if len(torsion_indices) == 0
+        else (
+            mdtraj.compute_dihedrals(
+                trajectory, numpy.array(torsion_indices), periodic=False
+            )[0, :]
+            / numpy.pi
+            * 180.0
+        )
     )
 
     # Summaries any hydrogen bonds.
