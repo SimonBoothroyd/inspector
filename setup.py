@@ -42,4 +42,11 @@ setup(
 
     # Allows `setup.py test` to work correctly with pytest
     setup_requires=[] + pytest_runner,
+
+    # Set up the main CLI entry points
+    entry_points={
+        'console_scripts': [
+            'inspector=inspector.cli:cli',
+        ],
+    }
 )

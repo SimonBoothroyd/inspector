@@ -14,16 +14,18 @@ dependencies:
   - openforcefield
   - pydantic
 
-    # Backend dependencies
+    # - Backend dependencies
   - fastapi
+  - uvicorn
 
-    # Testing
+    # Test dependencies
   - pytest
   - pytest-cov
   - codecov
   - deepdiff
 
-    # Linting
+    # Developer dependencies
+    # - Linting
   - isort
   - black
   - flake8
