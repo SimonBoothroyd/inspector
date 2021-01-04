@@ -36,7 +36,11 @@ async def post_molecule_to_json(body: MoleculeToJSONBody):
 @api_router.post("/molecule/parameters", response_model=AppliedParameters)
 async def post_apply_parameters(body: ApplyParametersBody):
 
-    return label_molecule(body.molecule, force_field=ForceField(body.smirnoff_xml))
+    force_field = ForceField(
+        body.smirnoff_xml if body.smirnoff_xml is not None else body.openff_name
+    )
+
+    return label_molecule(body.molecule, force_field=force_field)
 
 
 @api_router.post("/molecule/geometry", response_model=GeometrySummary)

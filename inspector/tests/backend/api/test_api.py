@@ -1,6 +1,7 @@
 from io import StringIO
 
 import numpy
+import pytest
 from fastapi.testclient import TestClient
 from openforcefield.topology import Molecule
 from openforcefield.typing.engines.smirnoff import ForceField
@@ -43,13 +44,19 @@ def test_molecule_to_json(rest_client: TestClient, methane: Molecule):
     )
 
 
-def test_apply_parameters(
-    rest_client: TestClient, methane: Molecule, openff_1_0_0: ForceField
-):
+@pytest.mark.parametrize("as_object", [False, True])
+def test_apply_parameters(rest_client: TestClient, methane: Molecule, as_object: bool):
+
+    force_field_name = "openff-1.0.0.offxml"
+    force_field = ForceField(force_field_name)
+
+    if not as_object:
+        model_kwargs = {"smirnoff_xml": None, "openff_name": force_field_name}
+    else:
+        model_kwargs = {"smirnoff_xml": force_field.to_string(), "openff_name": None}
 
     body = ApplyParametersBody(
-        molecule=RESTMolecule.from_openff(methane),
-        smirnoff_xml=openff_1_0_0.to_string(),
+        molecule=RESTMolecule.from_openff(methane), **model_kwargs
     )
 
     request = rest_client.post(
@@ -58,7 +65,7 @@ def test_apply_parameters(
     request.raise_for_status()
 
     response_model = AppliedParameters.parse_raw(request.text)
-    expected_model = label_molecule(methane, openff_1_0_0)
+    expected_model = label_molecule(methane, force_field)
 
     compare_pydantic_models(response_model, expected_model)
 
