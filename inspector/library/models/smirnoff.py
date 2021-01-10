@@ -252,6 +252,8 @@ class vdWType(_ParameterType):
 class LibraryChargeType(_ParameterType):
     """A pydantic representation of a SMIRNOFF Library Charge type."""
 
+    type: Literal["LibraryChargeType"] = "LibraryChargeType"
+
     charge: conlist(float, min_items=1) = Field(
         ..., description="The charge of each tagged atom [e]."
     )
@@ -280,6 +282,8 @@ class LibraryChargeType(_ParameterType):
 
 class ChargeIncrementType(_ParameterType):
     """A pydantic representation of a SMIRNOFF bond charge correction type."""
+
+    type: Literal["ChargeIncrementType"] = "ChargeIncrementType"
 
     charge_increment: conlist(float, min_items=1) = Field(
         ..., description="The charge increment to apply to each tagged atom [e]."
