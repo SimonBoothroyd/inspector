@@ -11,7 +11,7 @@ dependencies:
     # Core dependencies
   - click
   - mdtraj
-  - openforcefield
+  - openforcefield >= 0.8.3
   - pydantic
 
     # - Backend dependencies
