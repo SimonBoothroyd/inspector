@@ -20,12 +20,12 @@ class ApplyParametersBody(BaseModel):
     )
 
     smirnoff_xml: Optional[str] = Field(
-        ...,
+        None,
         description="The SMIRNOFF serialized force field to apply to the ``molecule``. "
         "This field is mutually exclusive with ``openff_name``.",
     )
     openff_name: Optional[str] = Field(
-        ...,
+        None,
         description="The name of an OpenFF released force field to apply to the "
         "``molecule``. This field is mutually exclusive with ``smirnoff_xml``.",
     )
@@ -33,9 +33,12 @@ class ApplyParametersBody(BaseModel):
     @validator("openff_name")
     def _validate_mutual_exclusive(cls, v, values):
 
-        assert (v is None or values["smirnoff_xml"] is None) and (
-            v is not None or values["smirnoff_xml"] is not None
+        smirnoff_xml = values.get("smirnoff_xml", None)
+
+        assert (v is None or smirnoff_xml is None) and (
+            v is not None or smirnoff_xml is not None
         ), "exactly one of ``smirnoff_xml`` and ``openff_name`` must be specified."
+
         return v
 
 
