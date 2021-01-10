@@ -55,7 +55,7 @@ class RESTMolecule(BaseModel):
 
     geometry: conlist(float, min_items=1) = Field(
         ...,
-        description="A flattened array of the molecules XYZ atomic coordinates [a0] "
+        description="A flattened array of the molecules XYZ atomic coordinates [Å] "
         "with length=n_atoms*3 which can be reshaped to array with shape=(n_atoms, 3)."
         "\n"
         "The ordering of the coordinates must match the ordering of the ``symbols`` "
