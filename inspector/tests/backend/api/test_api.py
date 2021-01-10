@@ -17,6 +17,7 @@ from inspector.library.forcefield import label_molecule
 from inspector.library.geometry import summarize_geometry
 from inspector.library.models.forcefield import AppliedParameters
 from inspector.library.models.geometry import GeometrySummary
+from inspector.library.models.minimization import MinimizationTrajectory
 from inspector.library.models.molecule import RESTMolecule
 from inspector.tests import compare_pydantic_models
 
@@ -83,3 +84,34 @@ def test_summarize_geometry(rest_client: TestClient, methane: Molecule):
     expected_model = summarize_geometry(methane, methane.conformers[0])
 
     compare_pydantic_models(response_model, expected_model)
+
+
+@pytest.mark.parametrize("as_object", [False, True])
+def test_minimize_conformer(
+    rest_client: TestClient, methane: Molecule, as_object: bool
+):
+
+    force_field_name = "openff_unconstrained-1.0.0.offxml"
+    force_field = ForceField(force_field_name)
+
+    if not as_object:
+        model_kwargs = {"smirnoff_xml": None, "openff_name": force_field_name}
+    else:
+        model_kwargs = {"smirnoff_xml": force_field.to_string(), "openff_name": None}
+
+    body = ApplyParametersBody(
+        molecule=RESTMolecule.from_openff(methane), **model_kwargs
+    )
+
+    request = rest_client.post(
+        f"{settings.API_DEV_STR}/molecule/minimize", data=body.json()
+    )
+    request.raise_for_status()
+
+    response_model = MinimizationTrajectory.parse_raw(request.text)
+
+    assert len(response_model.frames) > 1
+    assert (
+        response_model.frames[0].potential_energy
+        > response_model.frames[-1].potential_energy
+    )

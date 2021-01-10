@@ -8,13 +8,16 @@ from simtk import unit
 
 from inspector.backend.models.molecules import (
     ApplyParametersBody,
+    MinimizeConformerBody,
     MoleculeToJSONBody,
     SummarizeGeometryBody,
 )
 from inspector.library.forcefield import label_molecule
 from inspector.library.geometry import summarize_geometry
+from inspector.library.minimization import EnergyMinimizer
 from inspector.library.models.forcefield import AppliedParameters
 from inspector.library.models.geometry import GeometrySummary
+from inspector.library.models.minimization import MinimizationTrajectory
 from inspector.library.models.molecule import RESTMolecule
 
 api_router = APIRouter()
@@ -50,3 +53,19 @@ async def post_summarize_geometry(body: SummarizeGeometryBody):
         len(body.molecule.symbols), 3
     )
     return summarize_geometry(body.molecule, conformer * unit.angstrom)
+
+
+@api_router.post("/molecule/minimize", response_model=MinimizationTrajectory)
+async def post_minimize_conformer(body: MinimizeConformerBody):
+
+    force_field = ForceField(
+        body.smirnoff_xml if body.smirnoff_xml is not None else body.openff_name
+    )
+    conformer = (
+        numpy.array(body.molecule.geometry).reshape(len(body.molecule.symbols), 3)
+        * unit.angstrom
+    )
+
+    return EnergyMinimizer.minimize(
+        body.molecule, conformer, force_field, method=body.method
+    )
