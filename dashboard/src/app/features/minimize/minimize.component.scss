@@ -1,0 +1,36 @@
+.checkbox-container {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 38px;
+
+  > .mat-checkbox {
+    margin-left: 20px;
+  }
+}
+
+// Use for text lines which do not contain a select box.
+.text-container {
+  padding-top: 1.28125em;
+  padding-bottom: 1.6875em;
+
+  line-height: 1.125;
+}
+
+.warning-text {
+  text-align: center;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.mol-viewer-container {
+  width: 350px;
+  height: 350px;
+
+  margin: auto;
+
+  display: flex;
+
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0 rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}

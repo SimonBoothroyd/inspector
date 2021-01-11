@@ -1,0 +1,41 @@
+<nav mat-tab-nav-bar class="main-tab-bar">
+  <a
+    mat-tab-link
+    *ngFor="let tab of tabPages"
+    [routerLink]="tab.link"
+    [active]="activeTabIndex(routerState$ | async) === tab.index"
+  >
+    {{ tab.label }}
+  </a>
+</nav>
+
+<div class="content-panel-container">
+  <div class="content-panel">
+    <div *ngIf="(state$ | async)?.molecule">
+      <router-outlet></router-outlet>
+    </div>
+    <div *ngIf="!(state$ | async)?.molecule">
+      Load a molecule using the panel on the right ->
+    </div>
+  </div>
+</div>
+
+<div class="molecule-panel" fxLayout="column" fxLayoutGap="10px">
+  <div>
+    <input type="file" (change)="handleFileInput($event)" [accept]="['.sdf']" />
+  </div>
+  <mat-divider></mat-divider>
+  <div fxFlex>
+    <app-loadable [loadable]="(state$ | async)?.molecule">
+      <div class="mol-viewer-container">
+        <app-mol-viewer
+          [molecule]="(state$ | async)?.molecule?.molecule"
+        ></app-mol-viewer>
+      </div>
+    </app-loadable>
+  </div>
+  <mat-divider></mat-divider>
+  <div fxFlex="20">
+    <mat-checkbox>Show hydrogen bonds</mat-checkbox>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: #fafafa;
+}
+
+mat-icon.icon-size-16 {
+  width: 16px;
+  height: 16px;
+  line-height: 16px !important;
+  font-size: 16px;
+}
+
+.horizontal-mat-list.mat-list-base {
+  padding-top: 0;
+
+  > .mat-list-item {
+    max-width: 260px;
+    min-width: 250px;
+
+    display: inline-block;
+
+    font-size: 13px;
+    height: 38px;
+  }
+}
+
+.inline-select {
+  display: inline;
+
+  > .mat-form-field {
+    margin-left: 20px;
+  }
+}
+
+.indented-paragraph {
+  padding: 0 16px;
+
+  &.mono {
+    font-family: "Roboto Mono", monospace;
+  }
+}

@@ -1,0 +1,16 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  min-width: 1px;
+  min-height: 1px;
+
+  height: 100%;
+  width: 100%;
+
+  display: block;
+  position: relative;
+}
