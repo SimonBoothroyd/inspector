@@ -1,0 +1,81 @@
+<div *ngIf="state$ | async as state" fxLayout="column" fxLayoutGap="10px">
+  <div>
+    <span>Select the force fields to apply:</span>
+    <div class="inline-select">
+      <mat-form-field>
+        <mat-label>Apply a force field...</mat-label>
+        <mat-select
+          (valueChange)="onForceFieldSelected($event, state)"
+          [disabled]="!canSelectForceField(state)"
+        >
+          <mat-option
+            *ngFor="let value of forceFieldOptions(state?.parameters)"
+            [value]="value"
+          >
+            {{ value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-list class="horizontal-mat-list">
+    <mat-list-item *ngFor="let pair of state?.parameters | keyvalue">
+      <p mat-line>{{ pair.key }}</p>
+      <mat-icon class="icon-size-16" *ngIf="pair.value.loading"
+        >hourglass_top
+      </mat-icon>
+      <mat-icon class="icon-size-16" *ngIf="pair.value.error">error</mat-icon>
+      <button mat-icon-button *ngIf="!pair.value.loading">
+        <mat-icon class="icon-size-16">clear</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+  <div *ngIf="parameterHandlers(state) as handlers">
+    <ng-container *ngIf="handlers.size > 0">
+      <span>Select the type of parameter to inspect:</span>
+      <div class="inline-select">
+        <mat-form-field>
+          <mat-label>Parameter handler</mat-label>
+          <mat-select [(value)]="selectedHandler">
+            <mat-option
+              *ngFor="let handlerName of parameterHandlers(state).keys()"
+              [value]="handlerName"
+            >
+              {{ handlerName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="selectedHandler != undefined">
+          <mat-label>Attribute</mat-label>
+          <mat-select [(value)]="selectedAttribute">
+            <mat-option
+              *ngFor="
+                let attributeName of parameterHandlers(state).get(
+                  selectedHandler
+                )
+              "
+              [value]="attributeName"
+            >
+              {{ attributeName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="selectedHandler && selectedAttribute">
+    <span *ngIf="hoveredAttribute != undefined" class="indented-paragraph mono">
+      {{ hoveredAttribute }}: {{ hoveredSMIRKS(state.parameters) }}
+    </span>
+    <span *ngIf="hoveredAttribute == undefined" class="indented-paragraph">
+      <i>Hover over a parameter to see the corresponding SMIRKS pattern.</i>
+    </span>
+    <app-plotly
+      [figure]="forceFieldFigure(state.parameters)"
+      [config]="{ displayModeBar: false }"
+      [subplotWidth]="800"
+      [subplotHeight]="300"
+      (hover)="onAttributeHover($event)"
+    ></app-plotly>
+  </div>
+</div>

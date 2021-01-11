@@ -1,0 +1,106 @@
+<div *ngIf="state$ | async as state">
+  <div *ngIf="state?.parameters.size > 0" fxLayout="column" fxLayoutGap="10px">
+    <div class="text-container">
+      The loaded conformer will be minimized using the applied parameters:
+    </div>
+    <mat-list class="horizontal-mat-list">
+      <mat-list-item *ngFor="let pair of state?.parameters | keyvalue">
+        <p mat-line>{{ pair.key }}</p>
+        <mat-icon class="icon-size-16">{{
+          getStatusIcon(state, pair.key)
+        }}</mat-icon>
+      </mat-list-item>
+    </mat-list>
+    <div>
+      <span>Select the minimization algorithm to use:</span>
+      <div class="inline-select">
+        <mat-form-field>
+          <mat-label>Minimizer algorithm</mat-label>
+          <mat-select [(value)]="selectedMinimizer">
+            <mat-option *ngFor="let value of ['L-BGFS-B']" [value]="value">
+              {{ value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="minimize(state.molecule?.molecule, state.parameters)"
+      [disabled]="!canMinimize(state)"
+    >
+      Minimize
+    </button>
+    <div class="warning-text">
+      <b>warning</b> - all constraints will be removed prior to minimization
+    </div>
+  </div>
+  <div *ngIf="state?.parameters.size === 0" class="text-container">
+    No parameters have been applied to the conformer yet.
+  </div>
+  <div *ngIf="state?.minimizers.size > 0" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row">
+      <div fxFlex="100">
+        <div class="text-container">
+          Below are plots of the change in potential energy relative to the
+          starting energy:
+        </div>
+        <app-plotly
+          [figure]="energyTraceFigure(state.minimizers)"
+          [config]="{ displayModeBar: false }"
+          [subplotWidth]="420"
+          [subplotHeight]="300"
+        ></app-plotly>
+      </div>
+    </div>
+    <div>
+      <span>Select the minimization trajectory to view:</span>
+      <div class="inline-select">
+        <mat-form-field>
+          <mat-label>Select a force field...</mat-label>
+          <mat-select
+            [(value)]="selectedTrajectory"
+            (selectionChange)="frameIndex = 0"
+          >
+            <mat-option
+              *ngFor="let key of state?.minimizers.keys()"
+              [value]="key"
+            >
+              {{ key }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div *ngIf="selectedTrajectory" fxLayout="column" fxLayoutAlign=" center">
+      <div class="mol-viewer-container">
+        <app-mol-viewer
+          [molecule]="getMinimizedMolecule(state, frameIndex)"
+        ></app-mol-viewer>
+      </div>
+      <div>
+        <button mat-icon-button (click)="frameIndex = 0">
+          <mat-icon>skip_previous</mat-icon>
+        </button>
+        <mat-slider
+          thumbLabel
+          min="0"
+          [max]="state.minimizers.get(selectedTrajectory).frames.length - 1"
+          step="1"
+          tickInterval="2"
+          [(value)]="frameIndex"
+        ></mat-slider>
+        <button
+          mat-icon-button
+          (click)="
+            frameIndex =
+              state.minimizers.get(selectedTrajectory).frames.length - 1
+          "
+        >
+          <mat-icon>skip_next</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="legend-entry">
+  <svg [attr.width]="line ? 30.0 : 6.8" height="6.8" display="inline">
+    <g *ngIf="line">
+      <path
+        d="M0,0h30"
+        transform="translate(0.0 3.4)"
+        [style.fill]="'none'"
+        [style.stroke]="color"
+        [style.stroke-opacity]="1"
+        [style.stroke-width]="'2px'"
+      ></path>
+      <path
+        [attr.d]="symbolPath(marker)"
+        transform="translate(15.0 3.4)"
+        [style.opacity]="1"
+        [style.stroke-width]="0"
+        [style.fill]="color"
+        [style.fill-opacity]="1"
+      />
+    </g>
+    <g *ngIf="!line">
+      <path
+        [attr.d]="symbolPath(marker)"
+        transform="translate(3.4 3.4)"
+        [style.opacity]="1"
+        [style.stroke-width]="0"
+        [style.fill]="color"
+        [style.fill-opacity]="1"
+      />
+    </g>
+  </svg>
+  {{ text }}
+</div>

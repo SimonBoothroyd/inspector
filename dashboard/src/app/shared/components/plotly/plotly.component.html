@@ -1,0 +1,19 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <div
+    #plot
+    [className]="defaultClassName"
+    class="plot__container"
+    fxLayout="column"
+  ></div>
+  <div *ngIf="plotInstance != undefined" class="legend">
+    <app-plotly-legend-entry
+      *ngFor="let legendEntry of generateLegend()"
+      [marker]="legendEntry.marker"
+      [color]="legendEntry.color"
+      [text]="legendEntry.text"
+      [line]="legendEntry.line"
+      (click)="onToggleTrace(legendEntry.group, legendEntry.name)"
+    >
+    </app-plotly-legend-entry>
+  </div>
+</div>
