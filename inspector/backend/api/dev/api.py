@@ -67,5 +67,9 @@ async def post_minimize_conformer(body: MinimizeConformerBody):
     )
 
     return EnergyMinimizer.minimize(
-        body.molecule, conformer, force_field, method=body.method
+        body.molecule,
+        conformer,
+        force_field,
+        method=body.method,
+        energy_tolerance=body.energy_tolerance,
     )

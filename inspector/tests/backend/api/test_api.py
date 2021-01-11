@@ -10,6 +10,7 @@ from simtk import unit
 from inspector.backend.core.config import settings
 from inspector.backend.models.molecules import (
     ApplyParametersBody,
+    MinimizeConformerBody,
     MoleculeToJSONBody,
     SummarizeGeometryBody,
 )
@@ -99,7 +100,7 @@ def test_minimize_conformer(
     else:
         model_kwargs = {"smirnoff_xml": force_field.to_string(), "openff_name": None}
 
-    body = ApplyParametersBody(
+    body = MinimizeConformerBody(
         molecule=RESTMolecule.from_openff(methane), **model_kwargs
     )
 

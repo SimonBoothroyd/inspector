@@ -60,7 +60,7 @@ def test_minimize(as_rest_molecule, z_propenal):
     if not as_rest_molecule:
         molecule = off_molecule
 
-    force_field = ForceField("openff_unconstrained-1.2.0.offxml")
+    force_field = ForceField("openff-1.2.0.offxml")
 
     trajectory = EnergyMinimizer.minimize(
         molecule, conformer, force_field, method="L-BFGS-B"
@@ -68,6 +68,8 @@ def test_minimize(as_rest_molecule, z_propenal):
 
     actual_conformer = numpy.array(trajectory.frames[-1].geometry).reshape(9, 3)
     actual_energy = trajectory.frames[-1].potential_energy
+
+    force_field = ForceField("openff_unconstrained-1.2.0.offxml")
 
     expected_energy, expected_conformer = expected_conformer_and_energy(
         off_molecule,
