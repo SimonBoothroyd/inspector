@@ -1,7 +1,7 @@
 import abc
 import copy
 import functools
-from typing import List, Literal, Tuple, Union
+from typing import List, Literal, Optional, Tuple, Union
 
 import numpy
 from openforcefield.topology import Molecule
@@ -56,7 +56,8 @@ class EnergyMinimizer(abc.ABC):
         molecule: Union[Molecule, RESTMolecule],
         conformer: unit.Quantity,
         force_field: ForceField,
-        method: Literal["L-BFGS-B"],
+        method: Literal["L-BFGS-B"] = "L-BFGS-B",
+        energy_tolerance: Optional[float] = None,
     ) -> MinimizationTrajectory:
         """Performs energy minimization of a specified conformer of a molecule.
 
@@ -66,6 +67,8 @@ class EnergyMinimizer(abc.ABC):
                 compatible with nm.
             force_field: The force field which defines the potential energy function.
             method: The minimization algorithm to use.
+            energy_tolerance: The target tolerance to converge the energy within-in
+                [kJ / mol]
 
         Returns:
             The trajectory of each iteration of the minimization, including both the
@@ -77,11 +80,11 @@ class EnergyMinimizer(abc.ABC):
         if isinstance(molecule, RESTMolecule):
             molecule = molecule.to_openff()
 
+        if len(force_field.get_parameter_handler("Constraints").parameters) > 0:
+            force_field.deregister_parameter_handler("Constraints")
+
         # Apply the force field to the molecule.
         omm_system = force_field.create_openmm_system(molecule.to_topology())
-
-        if omm_system.getNumConstraints() > 0:
-            raise NotImplementedError("Constraints are not currently supported.")
 
         # Create an array to store each frame in and a callback function
         # to create and store the frame.
@@ -109,6 +112,7 @@ class EnergyMinimizer(abc.ABC):
             method=method,
             jac=True,
             callback=callback,
+            tol=energy_tolerance,
         )
 
         if not result.success:

@@ -75,3 +75,8 @@ class MinimizeConformerBody(_BaseForceFieldBody):
     method: Literal["L-BFGS-B"] = Field(
         "L-BFGS-B", description="The minimization algorithm to use."
     )
+
+    energy_tolerance: float = Field(
+        1.0e-3,
+        description="The target tolerance to converge the energy within-in [kJ / mol].",
+    )
