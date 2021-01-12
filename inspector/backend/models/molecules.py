@@ -80,3 +80,11 @@ class MinimizeConformerBody(_BaseForceFieldBody):
         1.0e-3,
         description="The target tolerance to converge the energy within-in [kJ / mol].",
     )
+
+
+class DecomposeEnergyBody(_BaseForceFieldBody):
+    """The expected body of the ``/molecules/energy`` POST endpoint."""
+
+    molecule: RESTMolecule = Field(
+        ..., description="The molecule whose energy should be decomposed."
+    )
