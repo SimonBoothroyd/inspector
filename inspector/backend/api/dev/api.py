@@ -8,13 +8,16 @@ from simtk import unit
 
 from inspector.backend.models.molecules import (
     ApplyParametersBody,
+    DecomposeEnergyBody,
     MinimizeConformerBody,
     MoleculeToJSONBody,
     SummarizeGeometryBody,
 )
+from inspector.library.decomposition import evaluate_per_term_energies
 from inspector.library.forcefield import label_molecule
 from inspector.library.geometry import summarize_geometry
 from inspector.library.minimization import EnergyMinimizer
+from inspector.library.models.energy import DecomposedEnergy
 from inspector.library.models.forcefield import AppliedParameters
 from inspector.library.models.geometry import GeometrySummary
 from inspector.library.models.minimization import MinimizationTrajectory
@@ -73,3 +76,17 @@ async def post_minimize_conformer(body: MinimizeConformerBody):
         method=body.method,
         energy_tolerance=body.energy_tolerance,
     )
+
+
+@api_router.post("/molecule/energy", response_model=DecomposedEnergy)
+async def post_decompose_energy(body: DecomposeEnergyBody):
+
+    force_field = ForceField(
+        body.smirnoff_xml if body.smirnoff_xml is not None else body.openff_name
+    )
+    conformer = (
+        numpy.array(body.molecule.geometry).reshape(len(body.molecule.symbols), 3)
+        * unit.angstrom
+    )
+
+    return evaluate_per_term_energies(body.molecule, conformer, force_field)
