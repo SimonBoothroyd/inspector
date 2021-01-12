@@ -11,10 +11,12 @@ def test_evaluate_per_term_energies(z_propenal, openff_1_0_0):
     z_propenal._conformers = [z_propenal.conformers[0]]
     molecule = RESTMolecule.from_openff(z_propenal)
 
+    off_molecule = molecule.to_openff()
+
     # Compute the expected energy
     unconstrained_ff = ForceField("openff_unconstrained-1.0.0.offxml")
 
-    omm_system = unconstrained_ff.create_openmm_system(z_propenal.to_topology())
+    omm_system = unconstrained_ff.create_openmm_system(off_molecule.to_topology())
     expected_energy, _ = evaluate_energy(omm_system, z_propenal.conformers[0])
 
     # Compute the decomposed energies.

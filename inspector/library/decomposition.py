@@ -342,6 +342,10 @@ def evaluate_per_term_energies(
         _, sigma, epsilon = nonbonded_force.getParticleParameters(i)
         nonbonded_force.setParticleParameters(i, 0.0, sigma, epsilon)
 
+    for i in range(nonbonded_force.getNumExceptions()):
+        index_a, index_b, _, sigma, epsilon = nonbonded_force.getExceptionParameters(i)
+        nonbonded_force.setExceptionParameters(i, index_a, index_b, 0.0, sigma, epsilon)
+
     _, no_charge_energies = evaluate_energy(omm_system, conformer)
 
     vdw_energy = no_charge_energies[0].value_in_unit(unit.kilojoules_per_mole)
